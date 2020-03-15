@@ -7,10 +7,11 @@ var connection = mysql.createConnection({
 });
  
 connection.connect();
+
+
  
-connection.query('SELECT * FROM restaurants', function (error, results, fields) {
-  if (error) throw error;
-  console.log('The solution is foo: ', results);
-});
- 
-connection.end();
+// connection.end();
+
+module.exports = connection;
+
+// { foo: true }
