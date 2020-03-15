@@ -7,7 +7,9 @@
   "engines": {
     "node": ">=6.13.0"
   },
-  "scripts": {},
+  "scripts": {
+    "server": "nodemon database/index.js"
+  },
   "dependencies": {
     "express": "^4.17.1",
     "faker": "^4.1.0",

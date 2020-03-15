@@ -1,8 +1,16 @@
-var faker = require('faker');
-
-var randomRestaurant = faker.name.firstName(); // Rowan Nikolaus
-var randomDish = faker.lorem.word(); // Kassandra.Haley@erich.biz
-var randomFoodImg = faker.image.food();
-
-
-console.log(randomRestaurant, randomDish, randomFoodImg)
+var mysql      = require('mysql');
+var connection = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'root',
+  password : 'jezebel',
+  database : 'dish_pics'
+});
+ 
+connection.connect();
+ 
+connection.query('SELECT * FROM restaurants', function (error, results, fields) {
+  if (error) throw error;
+  console.log('The solution is foo: ', results);
+});
+ 
+connection.end();
