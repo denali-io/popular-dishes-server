@@ -1,32 +1,64 @@
 var db = require("./index.js");
+var faker = require('faker');
+
+
 db.query('SELECT * FROM restaurants', function (error, results, fields) {
   if (error) throw error;
-  console.log('The solution is fo0: ', results);
+  console.log('restaurant names', results);
 });
 
 
 
+//hypothesis:
+//create the array..
+function generateNRestNames(n){
+  var results = [];
+    for (var i = 1; i <=n; i++){
+      results.push(faker.name.firstName())
+    }
+    return results;
+  }
+
+var mallPlazaEats =  generateNRestNames(2)
+// console.log(mallPlazaEats)
+//iterate forEach on the array to use one of the following:
+mallPlazaEats.forEach((restName)=>{
+  db.query(`INSERT INTO restaurants (rest_name) VALUES ('${restName}')`, function(error, results,fields){
+    if (error) throw error;
+    // console.log(results)
+  })
+})
+
+db.end()
+
+// db.query(`INSERT INTO restaurants (rest_name) VALUES (${'"BollyBoy"'})`, function(error, results,fields){
+//   if (error) throw error;
+//   console.log(results)
+// })
 
 
-// var faker = require('faker');
+
+
+// -- INSERT INTO restaurants (id,rest_name) VALUES
+// -- ('','');
+// -- INSERT INTO dishes (id,dish_name,restaurant_id) VALUES
+// -- ('','','');
+// -- INSERT INTO images (id,dish_id,img_url,comment) VALUES
+// -- ('','','','');
+
+
+
+
+//putting our information INTO our database. 
+
+
 
 
 // var randomRestaurant = faker.name.firstName(); // Rowan Nikolaus
 // var randomDish = faker.lorem.word(); // Kassandra.Haley@erich.biz
 
 
-// function generateNRestNames(n){
-//   var results = [];
-//   var bucket = {};
-//     for (var i = 1; i <=n; i++){
-  
-//       results.push(faker.name.firstName())
-      
-//     }
-//     return results;
-//   }
-//  var mallPlazaEats =  generateNRestNames(2)
-// console.log(mallPlazaEats)
+
 
 // function generateNDishNames(n){
 // var results = [];
