@@ -1,4 +1,5 @@
 var async = require('async');
+
 var db = require("./index.js");
 var faker = require('faker');
 
@@ -51,23 +52,35 @@ async.waterfall([
       var popDish = generateNDishNames(5);
       return popDish.map((dishName)=>{
         return `INSERT INTO dishes (dish_name, restaurant_id) VALUES ('${dishName}', '${restObj.id}')`
-        // db.query(`INSERT INTO dishes (dish_name, restaurant_id) VALUES ('${dishName}', '${restObj.id}')`, function(error, results,fields){
-          //   if (error) throw error;
-          // })
         } )
       })
       
-      console.log(insertQueries)
+      //flatten the insertQueries list to contain no non-nested array. 
+      var insertQueryArray = [].concat.apply([], insertQueries)
+      console.log(insertQueryArray)
+
+
+
+      async.each(insertQueryArray, function(item){
+        db.query(item)
+      }, function(err) {
+        console.log('poop')
+      })
+
     }
 ], function (err, result) {
   if (err){
     console.log('error', err)
+    db.end()
+
     return err;
   }
-  // console.log('all arguments touched')
+  db.end()
+  console.log('all arguments touched')
   // result now equals 'done'
 });
 
+console.log('heehee')
 
 //GENERAL HELPER DATA
 
@@ -110,4 +123,3 @@ async.waterfall([
 console.log('EOF')
 
 
-db.end()
