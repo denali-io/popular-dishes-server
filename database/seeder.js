@@ -45,23 +45,44 @@ var results = [];
 // add dishes to top two rests
 
 console.log('11111111')
-db.query('SELECT id FROM restaurants limit 2', function(error, results,fields){
-  if (error) throw error;
-  console.log('222222')
-
-  await results.forEach((restObj)=>{
-    var popDish = generateNDishNames(5);
-    console.log('333333333')
-    popDish.forEach((dishName)=>{
-      console.log('444444444')
-      // console.log(`INSERT INTO dishes (dish_name, restaurant_id) VALUES ('${dishName}', '${restObj.id}')`)
-      db.query(`INSERT INTO dishes (dish_name, restaurant_id) VALUES ('${dishName}', '${restObj.id}')`, function(error, results,fields){
-        if (error) throw error;
-        // console.log(results)
-      })
-    } )
+const populateDishes = async () => {
+  const dishes = await db.query('SELECT id FROM restaurants limit 2', function(error, results,fields){
+    if (error) throw error;
+    console.log('222222')
+     results.forEach((restObj)=>{
+      var popDish = generateNDishNames(5);
+      console.log('333333333')
+      popDish.forEach((dishName)=>{
+        console.log('444444444')
+        // console.log(`INSERT INTO dishes (dish_name, restaurant_id) VALUES ('${dishName}', '${restObj.id}')`)
+        db.query(`INSERT INTO dishes (dish_name, restaurant_id) VALUES ('${dishName}', '${restObj.id}')`, function(error, results,fields){
+          if (error) throw error;
+          // console.log(results)
+        })
+      } )
+    })
   })
-})
+
+  return dishes;
+}
+populateDishes();
+// console.log('11111111')
+// db.query('SELECT id FROM restaurants limit 2', function(error, results,fields){
+//   if (error) throw error;
+//   console.log('222222')
+//   await results.forEach((restObj)=>{
+//     var popDish = generateNDishNames(5);
+//     console.log('333333333')
+//     popDish.forEach((dishName)=>{
+//       console.log('444444444')
+//       // console.log(`INSERT INTO dishes (dish_name, restaurant_id) VALUES ('${dishName}', '${restObj.id}')`)
+//       db.query(`INSERT INTO dishes (dish_name, restaurant_id) VALUES ('${dishName}', '${restObj.id}')`, function(error, results,fields){
+//         if (error) throw error;
+//         // console.log(results)
+//       })
+//     } )
+//   })
+// })
 
 
 
