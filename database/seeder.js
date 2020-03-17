@@ -1,3 +1,4 @@
+var async = require('async');
 var db = require("./index.js");
 var faker = require('faker');
 
@@ -38,56 +39,34 @@ var results = [];
   }
   return results;
 }
-
-// console.log(generateNDishNames(5))
-
-
-// add dishes to top two rests
-
-console.log('11111111')
-const populateDishes = async () => {
-  const dishes = await db.query('SELECT id FROM restaurants limit 2', function(error, results,fields){
-    if (error) throw error;
-    console.log('222222')
-     results.forEach((restObj)=>{
-      var popDish = generateNDishNames(5);
-      console.log('333333333')
-      popDish.forEach((dishName)=>{
-        console.log('444444444')
-        // console.log(`INSERT INTO dishes (dish_name, restaurant_id) VALUES ('${dishName}', '${restObj.id}')`)
-        db.query(`INSERT INTO dishes (dish_name, restaurant_id) VALUES ('${dishName}', '${restObj.id}')`, function(error, results,fields){
-          if (error) throw error;
-          // console.log(results)
-        })
-      } )
+async.waterfall([
+  function(callback) {
+    var get2rest = 'SELECT id FROM restaurants limit 2'
+    db.query(get2rest, function(error, results,fields){
+      callback(null, results)
     })
-  })
-
-  return dishes;
-}
-populateDishes();
-// console.log('11111111')
-// db.query('SELECT id FROM restaurants limit 2', function(error, results,fields){
-//   if (error) throw error;
-//   console.log('222222')
-//   await results.forEach((restObj)=>{
-//     var popDish = generateNDishNames(5);
-//     console.log('333333333')
-//     popDish.forEach((dishName)=>{
-//       console.log('444444444')
-//       // console.log(`INSERT INTO dishes (dish_name, restaurant_id) VALUES ('${dishName}', '${restObj.id}')`)
-//       db.query(`INSERT INTO dishes (dish_name, restaurant_id) VALUES ('${dishName}', '${restObj.id}')`, function(error, results,fields){
-//         if (error) throw error;
-//         // console.log(results)
-//       })
-//     } )
-//   })
-// })
-
-
-
-
-
+  },
+  function(results, callback) {
+    const insertQueries = results.map((restObj)=>{
+      var popDish = generateNDishNames(5);
+      return popDish.map((dishName)=>{
+        return `INSERT INTO dishes (dish_name, restaurant_id) VALUES ('${dishName}', '${restObj.id}')`
+        // db.query(`INSERT INTO dishes (dish_name, restaurant_id) VALUES ('${dishName}', '${restObj.id}')`, function(error, results,fields){
+          //   if (error) throw error;
+          // })
+        } )
+      })
+      
+      console.log(insertQueries)
+    }
+], function (err, result) {
+  if (err){
+    console.log('error', err)
+    return err;
+  }
+  // console.log('all arguments touched')
+  // result now equals 'done'
+});
 
 
 //GENERAL HELPER DATA
