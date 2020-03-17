@@ -1,10 +1,10 @@
 var db = require("./index.js");
 var faker = require('faker');
 
-
+//see all the thingsin the table
 db.query('SELECT * FROM restaurants', function (error, results, fields) {
   if (error) throw error;
-  console.log('restaurant names', results);
+  // console.log('restaurant names', results);
 });
 
 
@@ -29,15 +29,47 @@ mallPlazaEats.forEach((restName)=>{
   })
 })
 
-db.end()
 
-// db.query(`INSERT INTO restaurants (rest_name) VALUES (${'"BollyBoy"'})`, function(error, results,fields){
-//   if (error) throw error;
-//   console.log(results)
-// })
+//generate random dish names
+function generateNDishNames(n){
+var results = [];
+  for (var i = 1; i <=n; i++){
+    results.push(faker.lorem.word())
+  }
+  return results;
+}
+
+// console.log(generateNDishNames(5))
+
+
+// add dishes to top two rests
+
+console.log('11111111')
+db.query('SELECT id FROM restaurants limit 2', function(error, results,fields){
+  if (error) throw error;
+  console.log('222222')
+
+  await results.forEach((restObj)=>{
+    var popDish = generateNDishNames(5);
+    console.log('333333333')
+    popDish.forEach((dishName)=>{
+      console.log('444444444')
+      // console.log(`INSERT INTO dishes (dish_name, restaurant_id) VALUES ('${dishName}', '${restObj.id}')`)
+      db.query(`INSERT INTO dishes (dish_name, restaurant_id) VALUES ('${dishName}', '${restObj.id}')`, function(error, results,fields){
+        if (error) throw error;
+        // console.log(results)
+      })
+    } )
+  })
+})
 
 
 
+
+
+
+
+//GENERAL HELPER DATA
 
 // -- INSERT INTO restaurants (id,rest_name) VALUES
 // -- ('','');
@@ -49,29 +81,6 @@ db.end()
 
 
 
-//putting our information INTO our database. 
-
-
-
-
-// var randomRestaurant = faker.name.firstName(); // Rowan Nikolaus
-// var randomDish = faker.lorem.word(); // Kassandra.Haley@erich.biz
-
-
-
-
-// function generateNDishNames(n){
-// var results = [];
-// var bucket = {};
-//   for (var i = 1; i <=n; i++){
-
-//     results.push(faker.lorem.word())
-
-//   }
-//   return results;
-// }
-
-// console.log(generateNDishNames(5))
 
 
 
@@ -97,3 +106,8 @@ db.end()
 // https://s3-media0.fl.yelpcdn.com/bphoto/8TijMBQY9tXjAbVKm8qEyg/o.jpg
 
 // console.log(randomRestaurant, randomDish)
+
+console.log('EOF')
+
+
+db.end()
