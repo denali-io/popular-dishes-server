@@ -1,5 +1,5 @@
 var async = require('async');
-
+// var waterfall = require('async/waterfall');
 var db = require("./index.js");
 var faker = require('faker');
 
@@ -40,6 +40,7 @@ var results = [];
   }
   return results;
 }
+
 async.waterfall([
   function(callback) {
     var get2rest = 'SELECT id FROM restaurants limit 2'
@@ -57,23 +58,20 @@ async.waterfall([
       
       //flatten the insertQueries list to contain no non-nested array. 
       var insertQueryArray = [].concat.apply([], insertQueries)
-      console.log(insertQueryArray)
-
-
-
+      // console.log(insertQueryArray)
       async.each(insertQueryArray, function(item){
+        console.log(item)
         db.query(item)
-      }, function(err) {
+      }, 
+      function(err) {
         console.log('poop')
       })
-
+      callback(null)
     }
 ], function (err, result) {
   if (err){
     console.log('error', err)
     db.end()
-
-    return err;
   }
   db.end()
   console.log('all arguments touched')
@@ -81,6 +79,7 @@ async.waterfall([
 });
 
 console.log('heehee')
+
 
 //GENERAL HELPER DATA
 
