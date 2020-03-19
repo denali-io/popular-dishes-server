@@ -75,7 +75,8 @@ async.waterfall([
   },
 
   //function for adding LARGEimage urls
-  function(callback){
+  function(results, callback){
+
     
 
     let imgSmallURLs = [
@@ -90,13 +91,18 @@ async.waterfall([
       'https://s3-media0.fl.yelpcdn.com/bphoto/aUfFZt15nASgZn0jRKC4rQ/258s.jpg',
       'https://s3-media0.fl.yelpcdn.com/bphoto/OJgp_pkgC1ooPQ48Bz5ftw/258s.jpg'
       ]
-      var counter = 0;
-      var imgQueries = imgSmallURLs.map((url)=>{
-        
-        return `INSERT INTO images (img_url, dish_id) VALUES ('${url}')`
-      })
-    // console.log(imgQueries)
-    async.each(imgQueries, function(insertUrl){
+
+      var insertImgsQueries = [];
+      for (let i = 0; i < imgSmallURLs.length; i++) {
+        insertImgsQueries.push(`INSERT INTO images (img_url, dish_id) VALUES ('${imgSmallURLs[i]}', ${results[i].id} )`)
+      }
+
+
+
+
+
+    console.log(insertImgsQueries)
+    async.each(insertImgsQueries, function(insertUrl){
       db.query(insertUrl)
     }, function(err){
       console.log('poopoo')
