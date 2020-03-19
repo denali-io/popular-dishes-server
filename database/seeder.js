@@ -97,10 +97,6 @@ async.waterfall([
         insertImgsQueries.push(`INSERT INTO images (img_url, dish_id) VALUES ('${imgSmallURLs[i]}', ${results[i].id} )`)
       }
 
-
-
-
-
     console.log(insertImgsQueries)
     async.each(insertImgsQueries, function(insertUrl){
       db.query(insertUrl)
